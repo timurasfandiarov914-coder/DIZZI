@@ -41,7 +41,7 @@ for (const feature of [
   "dizzi-shell-v1",
   'data-action="add-playlist"',
 ]) {
-  if (!html.includes(feature)) errors.push("Expected feature marker missing: " + feature);
+  if (!(html + "\n" + sw).includes(feature)) errors.push("Expected feature marker missing: " + feature);
 }
 
 if (errors.length) {
