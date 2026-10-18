@@ -1,0 +1,19 @@
+{
+  "name": "DIZZI — твоё музыкальное пространство",
+  "short_name": "DIZZI",
+  "description": "Находи музыку, слушай и собирай собственные плейлисты.",
+  "lang": "ru",
+  "start_url": "./?source=pwa",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10110f",
+  "theme_color": "#11120f",
+  "icons": [
+    {
+      "src": "./icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
