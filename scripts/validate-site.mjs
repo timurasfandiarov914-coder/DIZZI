@@ -37,6 +37,7 @@ for (const feature of [
   "data-filter",
   "dizzi-playlists-v1",
   "dizzi-history-v1",
+  "navigator.mediaSession.setActionHandler",
   "navigator.serviceWorker.register",
   "dizzi-shell-v1",
   'data-action="add-playlist"',
