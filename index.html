@@ -4,6 +4,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#11120f">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="./icon.svg">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="description" content="DIZZI — находи музыку, собирай плейлисты и слушай в одном месте.">
 <title>DIZZI — твоя музыка</title>
 <style>
@@ -67,7 +71,7 @@
     </section>
 
     <section class="player-stage" id="player-stage" hidden>
-      <div class="stage-head"><b>СЕЙЧАС ИГРАЕТ</b><button class="text-btn" id="hide-stage">Свернуть</button></div>
+      <div class="stage-head"><b>СЕЙЧАС ИГРАЕТ</b><button class="text-btn" id="hide-stage">К списку ↓</button></div>
       <div class="stage-body" id="stage-body"><div id="yt-player"></div><div class="stage-placeholder" id="stage-placeholder">Выбери песню, чтобы начать воспроизведение</div></div>
       <p class="stage-caption" id="stage-caption">YouTube использует официальный встроенный плеер. Некоторые видео могут быть недоступны для встраивания.</p>
     </section>
@@ -226,7 +230,7 @@ $("shuffle-all").addEventListener("click",()=>{const list=currentVisible();if(!l
 $("clear-queue").addEventListener("click",()=>{queueTracks=current?[current]:[];queueIndex=current?0:-1;saveStore("dizzi-queue-v1",queueTracks);renderQueue();toast("Очередь очищена")});
 $("seek").addEventListener("input",()=>{const time=Number($("seek").value);if(current&&current.source==="youtube"&&ytPlayer){try{ytPlayer.seekTo(time,true)}catch{}}else if(Number.isFinite($("audio").duration))$("audio").currentTime=time});
 $("volume").addEventListener("input",()=>{const volume=Number($("volume").value)/100;$("audio").volume=volume;if(ytPlayer){try{ytPlayer.setVolume(Math.round(volume*100))}catch{}}});
-$("hide-stage").addEventListener("click",()=>{$("player-stage").hidden=true});
+$("hide-stage").addEventListener("click",()=>{$("tracks").scrollIntoView({behavior:"smooth",block:"start"})});
 $("audio").addEventListener("play",()=>{if(!current||current.source!=="audius")return;playing=true;startProgress();updatePlayingUI()});$("audio").addEventListener("pause",()=>{if(!current||current.source!=="audius")return;playing=false;stopProgress();updatePlayingUI()});$("audio").addEventListener("ended",handleEnded);$("audio").addEventListener("error",()=>{if(current&&current.source==="audius"){playing=false;stopProgress();setStatus("Не удалось воспроизвести этот поток. Выбери другой трек.","error");updatePlayingUI()}});
 function startProgress(){stopProgress();progressTimer=setInterval(syncProgress,650)}
 function stopProgress(){if(progressTimer){clearInterval(progressTimer);progressTimer=null}}
@@ -278,6 +282,9 @@ document.addEventListener("keydown",e=>{if(e.target.matches("input,textarea,sele
 function renderAndSave(){persistAll();render()}
 function initialize(){if(!Array.isArray(playlists))playlists=[];if(!Array.isArray(historyTracks))historyTracks=[];if(!Array.isArray(queueTracks))queueTracks=[];if(!likedTracks||typeof likedTracks!=="object")likedTracks={};render();loadTrending();ensureYoutubeApi();$("audio").volume=.85; if(queueTracks.length)renderQueue()}
 initialize();
+window.addEventListener("offline",()=>setStatus("Нет подключения к интернету. Поиск и потоковая музыка временно недоступны.","error"));
+window.addEventListener("online",()=>{setStatus("Соединение восстановлено.");if(view==="home")loadTrending()});
+if("serviceWorker" in navigator && location.protocol==="https:"){navigator.serviceWorker.register("./sw.js").catch(()=>{})}
 </script>
 </body>
 </html>
